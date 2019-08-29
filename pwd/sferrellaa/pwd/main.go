@@ -1,6 +1,6 @@
 // pwd is a go implementation of the unix tool "pwd"
 // created 23 March 2019 by SferrellaA
-// edited  28 March 2019 by SferrellaA
+// edited  28 August 2019 by SferrellaA
 package main
 
 import (
@@ -32,9 +32,9 @@ func usage() {
 // getFlags() configures and parses flags, returns pwd mode
 func getFlags() bool {
 
-	// Additional, hidden flags prevent user headache
+	// Note - additional, hidden flags prevent user headache
 
-	// Logical is assumed by default, so value not stored
+	// Logical is assumed by default, so values are not stored
 	flag.Bool("L", false, "")
 	flag.Bool("l", false, "")
 	flag.Bool("logical", false, "")
@@ -55,23 +55,17 @@ func getFlags() bool {
 	return false
 }
 
-// absolute() returns the current absolute/logical PWD
-func absolute() string {
-	abs, err := filepath.Abs(".")
-	errFail(err)
-	return abs
-}
-
 // PWD() provides `pwd` functionality as a callable function
 func PWD(physical bool) string {
 
 	// Get the absolute (logical) path
-	pwd := absolute()
+	abs, err := filepath.Abs(".")
+	errFail(err)
 
 	// If change logical to physical if argued for
 	if physical {
 		var err error
-		pwd, err = filepath.EvalSymlinks(pwd)
+		pwd, err = filepath.EvalSymlinks(abs)
 		errFail(err)
 	}
 
